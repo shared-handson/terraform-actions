@@ -42,3 +42,4 @@ runs:
         MSG="🚫 **PR自動クローズします。**"
         gh pr comment ${{ github.event.pull_request.number }} --body-file <(echo "${MSG}")
         gh pr close ${{ github.event.pull_request.number }}
+        exit 1

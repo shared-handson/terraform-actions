@@ -84,7 +84,7 @@ jobs:
 
             ### 🔧 エラー内容
             S3へ書き込みができない(存在しない) もしくは
-            ソースコードで `backend "S3" {}`を書いていない
+            ソースコードで \`backend \"S3\" {}\` を書いていない
 
       # Terraformのドライラン
       - name: Terraform Plan for PR
@@ -108,9 +108,9 @@ jobs:
             ⚠️ このPRは現在マージできません。以下の問題を修正してください：
 
             ### 🔧 エラー内容
-            ```terraform
+            \`\`\`terraform
             ${{ steps.plan.outputs.PLAN_OUTPUT }}
-            ```
+            \`\`\`
 
       # (成功時) Pull Request コメントに結果
       - name: PR Comment on Success
