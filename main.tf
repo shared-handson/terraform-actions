@@ -6,7 +6,7 @@ terraform {
   # S3バックエンドを使用することを明示的に宣言します。
   # バケット名などの具体的な設定は、CI/CDの `-backend-config` フラグから渡されるため、
   # ここでは空のブロックで問題ありません。a
-  backend "s3" {}
+  #backend "s3" {}
 
   # この設定ではAWSプロバイダーのバージョン3.0以上が必要であることを示します
   required_providers {
