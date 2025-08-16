@@ -1,9 +1,7 @@
-name: "Terraform CD - apply"
+name: "Terraform Manual - apply"
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -62,6 +60,6 @@ jobs:
         id: fmt
         run: terraform fmt -check
 
-      # Terraformの適用
-      - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false
+      # Terraformで作ったリソースの破棄
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve -input=false

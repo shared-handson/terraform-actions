@@ -1,4 +1,4 @@
-name: "Terraform CI"
+name: "Terraform CI - plan"
 
 on:
   pull_request:
@@ -84,7 +84,7 @@ jobs:
 
             ### 🔧 エラー内容
             S3へ書き込みができない(存在しない) もしくは
-            ソースコードで `backend "S3" {}'を書いていない
+            ソースコードで `backend "S3" {}`を書いていない
 
       # Terraformのドライラン
       - name: Terraform Plan for PR
@@ -126,12 +126,6 @@ jobs:
           \`\`\`terraform
           ${{ steps.plan.outputs.PLAN_OUTPUT }}
           \`\`\`
-
-          ### Terraform Format and Style 🖌️
-          \`${{ steps.fmt.outcome }}\`
-
-          ### Terraform Initialization ⚙️
-          \`${{ steps.init.outcome }}\`
           EOF
           )
           gh pr comment ${{ github.event.pull_request.number }} --body-file <(echo "${MSG}")
