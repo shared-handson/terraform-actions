@@ -1,1 +1,1 @@
-# shared-k3s
+# shared-k3s-infra
