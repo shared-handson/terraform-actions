@@ -25,14 +25,14 @@ runs:
         2. 修正完了後、新しいPRを作成してください
         3. または、このPRを再オープンして修正をpushしてください
 
-        ** 3秒後にPRを自動クローズします**
+        ** 10秒後にPRを自動クローズします**
         EOF
         )
         gh pr comment ${{ github.event.pull_request.number }} --body-file <(echo "${MSG}")
 
     - name: Sleep on Failure
       shell: bash
-      run: sleep 3
+      run: sleep 10
 
     - name: PR Close on Failure
       shell: bash
@@ -42,3 +42,4 @@ runs:
         MSG="🚫 **PR自動クローズします。**"
         gh pr comment ${{ github.event.pull_request.number }} --body-file <(echo "${MSG}")
         gh pr close ${{ github.event.pull_request.number }}
+        exit 1
