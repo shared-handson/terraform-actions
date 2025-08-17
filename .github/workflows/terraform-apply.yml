@@ -29,6 +29,14 @@ jobs:
         id: repo_name
         run: echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> "$GITHUB_ENV"
 
+      # Github Actions起動したユーザーのマッピング
+      - name: Github ID <-> Discord ID
+        id: map_id
+        run: |
+          DC_ID=$(echo '${{ secrets.GH_DC_USERMAP }}' | jq -r --arg GH_ID '${{ github.actor }}' '.[$GH_ID]')
+          echo "::add-mask::$DC_ID" # マスクするために必要
+          echo "DC_ID=$DC_ID" >> "$GITHUB_OUTPUT"
+
       # リポジトリのコードをチェックアウト
       - name: Checkout
         uses: actions/checkout@v4
@@ -62,16 +70,6 @@ jobs:
       # Terraformの適用
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false
-
-      # Github Actions起動したユーザーのマッピング
-      - name: Github ID <-> Discord ID
-        id: map_id
-        run: |
-          DC_ID=$(echo '${{ secrets.GH_DC_USERMAP }}' | jq -r --arg GH_ID '${{ github.actor }}' '.[$GH_ID]')
-          echo "::add-mask::$DC_ID" # マスクするために必要
-          echo "DC_ID=$DC_ID" >> "$GITHUB_OUTPUT"
-
-        # ${{ steps.map_id.outputs.DC_ID }}
 
       # (失敗時) Discordの通知
       - name: Discord Notification For Failure
