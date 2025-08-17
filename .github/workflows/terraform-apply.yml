@@ -67,7 +67,7 @@ jobs:
       - name: Github ID <-> Discord ID
         id: map_id # このステップの結果を後から参照するためのID
         run: |
-          DC_ID=$(echo ${{ secrets.GH_DC_USERMAP }} | jq -r --arg GH_ID ${{ github.actor }} '.[$GH_ID]')
+          DC_ID=$(echo '${{ secrets.GH_DC_USERMAP }}' | jq -r --arg GH_ID '${{ github.actor }}' '.[$GH_ID]')
           echo "DC_ID=$DC_ID" >> "$GITHUB_OUTPUT"
 
         # ${{ steps.map_id.outputs.DC_ID }}
