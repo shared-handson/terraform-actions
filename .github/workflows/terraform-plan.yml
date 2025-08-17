@@ -50,7 +50,6 @@ jobs:
 
       # Terraformの初期化
       - name: Terraform Init
-        id: init
         run: |
           terraform init \
             -backend-config="bucket=${{ secrets.AWS_TF_STATE_BUCKET }}" \
@@ -60,7 +59,6 @@ jobs:
 
       # Terraformのフォーマットチェック
       - name: Terraform Format
-        id: fmt
         run: terraform fmt -check
 
       # バックエンドS3の設定を確認

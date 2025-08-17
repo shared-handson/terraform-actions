@@ -1,4 +1,4 @@
-name: "Terraform Manual - apply"
+name: "Terraform Manual - destroy"
 
 on:
   workflow_dispatch:
