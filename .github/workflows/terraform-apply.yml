@@ -67,7 +67,7 @@ jobs:
       - name: Github ID <-> Discord ID
         id: map_id # このステップの結果を後から参照するためのID
         run: |
-          DC_ID=$(echo "${{ secrets.GH_DC_USERMAP }}" | jq -r --arg GH_ID "${{ github.actor }}" '.[$GH_ID]')
+          DC_ID=$(echo ${{ secrets.GH_DC_USERMAP }} | jq -r --arg GH_ID ${{ github.actor }} '.[$GH_ID]')
           echo "DC_ID=$DC_ID" >> "$GITHUB_OUTPUT"
 
         # ${{ steps.map_id.outputs.DC_ID }}
@@ -80,11 +80,10 @@ jobs:
           webhook: ${{ secrets.DC_WEBHOOK_GHAC }}
           username: GitHub Actions
           avatar_url: "https://github.com/actions.png"
-          color: 0x0000FF
+          color: 0xFF0000
           content: "<@${{ steps.map_id.outputs.DC_ID }}>"
           status: ${{ job.status }}
           title: "terraform apply"
-          description: "${{ env.ACTION_URL }}"
 
       # (中断時) Discordの通知
       - name: Discord Notification For Cancelled
@@ -94,11 +93,10 @@ jobs:
           webhook: ${{ secrets.DC_WEBHOOK_GHAC }}
           username: GitHub Actions
           avatar_url: "https://github.com/actions.png"
-          color: 0x00FFFF
+          color: 0xFFFF00
           content: "<@${{ steps.map_id.outputs.DC_ID }}>"
           status: ${{ job.status }}
           title: "terraform apply"
-          description: "${{ env.ACTION_URL }}"
 
       # (成功時) Discordの通知
       - name: Discord Notification For Success
@@ -108,8 +106,7 @@ jobs:
           webhook: ${{ secrets.DC_WEBHOOK_GHAC }}
           username: GitHub Actions
           avatar_url: "https://github.com/actions.png"
-          color: 0xFF0000
+          color: 0x0000FF
           content: "<@${{ steps.map_id.outputs.DC_ID }}>"
           status: ${{ job.status }}
           title: "terraform apply"
-          description: "See the result here: ${{ env.ACTION_URL }}"
