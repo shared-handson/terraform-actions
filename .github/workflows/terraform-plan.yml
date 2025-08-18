@@ -26,6 +26,10 @@ jobs:
       TF_VERSION: "1.12.2"
 
     steps:
+      # リポジトリのコードをチェックアウト
+      - name: Checkout
+        uses: actions/checkout@v4
+
       # 共通処理をComposite Actionで実行
       - name: Setup Terraform Environment
         id: setup
