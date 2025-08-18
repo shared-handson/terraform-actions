@@ -71,7 +71,7 @@ jobs:
         run: |
           {
             echo 'PLAN_OUTPUT<<EOF'
-            terraform plan -no-color -input=false
+            terraform plan -no-color -input=false 2>&1
             echo EOF
           } >> "$GITHUB_OUTPUT"
 
