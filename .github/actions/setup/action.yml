@@ -45,10 +45,6 @@ runs:
         echo "::add-mask::$DC_ID"
         echo "DC_ID=$DC_ID" >> "$GITHUB_OUTPUT"
 
-    # リポジトリのコードをチェックアウト
-    - name: Checkout
-      uses: actions/checkout@v4
-
     # AWSのOIDC認証を設定
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
