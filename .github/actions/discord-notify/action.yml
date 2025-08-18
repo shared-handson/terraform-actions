@@ -15,19 +15,23 @@ inputs:
   title:
     description: "Title of the notification embed"
     required: false
-    default: "GitHub Actions Status"
+    default: "terraform"
+  description:
+    description: "Description of the notification embed"
+    required: false
+    default: ""
   success-color:
     description: "Color for success notifications (hex)"
     required: false
-    default: "0x0000FF"  # 青
+    default: "0x0000FF" # 青
   failure-color:
     description: "Color for failure notifications (hex)"
     required: false
-    default: "0xFF0000"  # 赤
+    default: "0xFF0000" # 赤
   cancelled-color:
     description: "Color for cancelled notifications (hex)"
     required: false
-    default: "0xFFFF00"  # 黄
+    default: "0xFFFF00" # 黄
 
 # アクションの実行内容
 runs:
@@ -45,6 +49,7 @@ runs:
         content: "<@${{ inputs.mention-id }}>"
         status: ${{ inputs.job-status }}
         title: ${{ inputs.title }}
+        description: ${{ inputs.description }}
 
     # 失敗時の通知
     - name: Discord Notification For Failure
@@ -58,6 +63,7 @@ runs:
         content: "<@${{ inputs.mention-id }}>"
         status: ${{ inputs.job-status }}
         title: ${{ inputs.title }}
+        description: ${{ inputs.description }}
 
     # キャンセル時の通知
     - name: Discord Notification For Cancelled
@@ -71,3 +77,4 @@ runs:
         content: "<@${{ inputs.mention-id }}>"
         status: ${{ inputs.job-status }}
         title: ${{ inputs.title }}
+        description: ${{ inputs.description }}
