@@ -1,7 +1,46 @@
+# 使い方
+
+## terraform-plan
+
+main ブランチへのプルリクで自動的に起動される。  
+成功したら terraform plan の結果がプルリクのコメントで出力されるので待つ。  
+失敗したら失敗理由がプルリクのコメントで出力されて、自動的にプルリクがクローズする。
+
+## terraform-apply
+
+プルリクをマージしたら自動的に起動される。  
+結果は Discord チャンネルに通知される。
+
+## terraform-destroy
+
+Github Actions を手動実行する。
+結果は Discord チャンネルに通知される。
+
+1. Github のリポジトリページ
+2. 画面内の Actions タブ
+3. 左メニューから 「Terraform Manual - destroy」
+4. 「Run workflow」のドロップダウンメニュー
+5. 「Branch: main」
+6. 「Run workflow」の緑ボタンで実行
+
 # secrets
 
-備忘録として記載。  
-以下は全て Organizaions の共用 secrets として登録している為  
+以下は Organizaions の共用 secrets として登録しているが変動値の為、
+メンテが必要。
+
+- GH_DC_USERMAP
+  - Github と Discord のユーザー ID のマッピング
+  - メンバーが増えたらメンテナンスする
+  - Discord のユーザー ID は開発者モードを ON にしてユーザー右クリック
+  - 例)
+    ```
+    {
+      "githubname1": "012345678901234567",
+      "githubname2": "9876543210987654321"
+    }
+    ```
+
+以下は全て Organizaions の共用 secrets として登録していて固定値の為、
 基本的には新規登録などは不要。
 
 - AWS_IAM_ROLE
@@ -10,15 +49,6 @@
 - AWS_TF_STATE_BUCKET
   - バックエンドとして使う S3 のバケット名
   - 例) `tf-state-xxxxxxxxxxxx`
-- GH_DC_USERMAP
-  - Github と Discord のユーザー ID のマッピング
-  - 例)
-    ```
-    {
-      "githubname1": "012345678901234567",
-      "githubname2": "987654321098765432"
-    }
-    ```
 - DC_WEBHOOK_GHAC
   - 通知先の Discord チャンネルの Webhook URL
-  - 例) `https://discord.com/api/webhooks/xxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxx)`
+  - 例) `https://discord.com/api/webhooks/xxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxx`
