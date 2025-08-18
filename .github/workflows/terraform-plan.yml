@@ -60,9 +60,11 @@ jobs:
             ❌ **S3確認 : 失敗**
             ⚠️ このPRは現在マージできません。以下の問題を修正してください：
 
-            ### 🔧 エラー内容
-            S3へ書き込みができない(存在しない) もしくは
-            ソースコードで \`backend "S3" {}\` を書いていない
+            ### 🔧 詳細
+            以下のどれかが原因の可能性が高い
+            - S3へ書き込みができない
+            - S3が存在しない
+            - ソースコードで \`backend "S3" {}\` を書いていない
 
       # Terraformのドライラン
       - name: Terraform Plan for PR
@@ -89,10 +91,13 @@ jobs:
             ❌ **terraform plan : 失敗**
             ⚠️ このPRは現在マージできません。以下の問題を修正してください：
 
-            ### 🔧 エラー内容
+            ### 🔧 詳細
+            <details>
+            <summary>Show terraform plan</summary>
             \`\`\`terraform
             ${{ steps.plan.outputs.PLAN_OUTPUT }}
             \`\`\`
+            </details>
 
       # (成功時) Pull Request コメントに結果
       - name: PR Comment on Success
@@ -104,10 +109,13 @@ jobs:
           👍 **terraform plan : 成功**
           ✅ 正しく適用が可能です。内容は以下を確認してください。
 
-          ### Show Plan
+          ### 🔧 詳細
+          <details>
+          <summary>Show terraform plan</summary>
           \`\`\`terraform
           ${{ steps.plan.outputs.PLAN_OUTPUT }}
           \`\`\`
+          </details>
           EOF
           )
           gh pr comment ${{ github.event.pull_request.number }} --body-file <(echo "${MSG}")

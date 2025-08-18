@@ -19,14 +19,26 @@ main ブランチへのプルリクで自動的に起動される。
 プルリクをマージしたら自動的に起動される。  
 結果は Discord チャンネルに通知される。
 
-## terraform-destroy
+## terraform-destroy-plan
 
-Github Actions を手動実行する。
+Github Actions を手動実行で破棄内容を確認する。
 結果は Discord チャンネルに通知される。
 
 1. Github のリポジトリページ
 2. 画面内の Actions タブ
-3. 左メニューから 「Terraform Manual - destroy」
+3. 左メニューから 「Terraform Manual - destroy plan」
+4. 「Run workflow」のドロップダウンメニュー
+5. 「Branch: main」
+6. 「Run workflow」の緑ボタンで実行
+
+## terraform-destroy-exec
+
+Github Actions を手動実行で破棄を実行する。
+結果は Discord チャンネルに通知される。
+
+1. Github のリポジトリページ
+2. 画面内の Actions タブ
+3. 左メニューから 「Terraform Manual - destroy exec」
 4. 「Run workflow」のドロップダウンメニュー
 5. 「Branch: main」
 6. 「Run workflow」の緑ボタンで実行

@@ -1,4 +1,4 @@
-name: "Terraform Manual - destroy"
+name: "Terraform Manual - destroy exec"
 
 on:
   workflow_dispatch:
@@ -36,8 +36,8 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           tf-version: ${{ env.TF_VERSION }}
 
-      # Terraformで作ったリソースの破棄
-      - name: Terraform Destroy
+      # Terraformで作ったリソースの破棄の実行
+      - name: Terraform Destroy Exec
         run: terraform destroy -auto-approve -input=false
 
       # Discord通知をComposite Actionで実行
@@ -48,4 +48,5 @@ jobs:
           webhook-url: ${{ secrets.DC_WEBHOOK_GHAC }}
           job-status: ${{ job.status }}
           mention-id: ${{ steps.setup.outputs.discord-id }}
-          title: "terraform destroy"
+          title: "terraform destroy exec"
+          description: "結果の詳細はWorkflowを確認してください"
