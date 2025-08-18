@@ -94,9 +94,11 @@ jobs:
             ### 🔧 詳細
             <details>
             <summary>Show terraform plan</summary>
+
             \`\`\`terraform
             ${{ steps.plan.outputs.PLAN_OUTPUT }}
             \`\`\`
+
             </details>
 
       # (成功時) Pull Request コメントに結果
@@ -112,9 +114,11 @@ jobs:
           ### 🔧 詳細
           <details>
           <summary>Show terraform plan</summary>
+
           \`\`\`terraform
           ${{ steps.plan.outputs.PLAN_OUTPUT }}
           \`\`\`
+
           </details>
           EOF
           )
