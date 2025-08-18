@@ -1,3 +1,11 @@
+# 適用方法
+
+.github フォルダを使いたいリポジトリの直下に丸ごとコピーすれば OK。  
+特に大事なのが以下の２つのフォルダ。
+
+- .github/actions
+- .github/workflows
+
 # 使い方
 
 ## terraform-plan

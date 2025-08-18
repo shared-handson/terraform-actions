@@ -69,11 +69,15 @@ jobs:
         id: plan
         continue-on-error: true
         run: |
+          set +e
+          OUTPUT=$(terraform plan -no-color -input=false 2>&1)
+          PLAN_EXIT_CODE=$?
           {
             echo 'PLAN_OUTPUT<<EOF'
-            terraform plan -no-color -input=false
+            echo "$OUTPUT"
             echo EOF
           } >> "$GITHUB_OUTPUT"
+          exit $PLAN_EXIT_CODE
 
       # (バックエンドチェック失敗時) Pull Request コメントに結果してクローズ
       - name: Handle Terraform Plan Failure
