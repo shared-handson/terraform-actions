@@ -21,91 +21,29 @@ jobs:
       # AWS認証情報とTerraformバックエンド設定を環境変数として定義
       AWS_REGION: "ap-northeast-1"
       TF_VERSION: "1.12.2"
-      ACTION_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
     steps:
-      # リポジトリ名だけを取得
-      - name: Get repository name without owner
-        id: repo_name
-        run: echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> "$GITHUB_ENV"
-
-      # Github Actions起動したユーザーのマッピング
-      - name: Github ID <-> Discord ID
-        id: map_id
-        run: |
-          DC_ID=$(echo '${{ secrets.GH_DC_USERMAP }}' | jq -r --arg GH_ID '${{ github.actor }}' '.[$GH_ID]')
-          echo "::add-mask::$DC_ID" # マスクするために必要
-          echo "DC_ID=$DC_ID" >> "$GITHUB_OUTPUT"
-
-      # リポジトリのコードをチェックアウト
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      # AWSのOIDC認証を設定
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      # 共通処理をComposite Actionで実行
+      - name: Setup Terraform Environment
+        id: setup
+        uses: ./.github/actions/setup
         with:
-          role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
+          aws-iam-role: ${{ secrets.AWS_IAM_ROLE }}
+          aws-tf-state-bucket: ${{ secrets.AWS_TF_STATE_BUCKET }}
+          gh-dc-usermap: ${{ secrets.GH_DC_USERMAP }}
           aws-region: ${{ env.AWS_REGION }}
-
-      # Terraform CLIのセットアップ
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ env.TF_VERSION }}
-
-      # Terraformの初期化
-      - name: Terraform Init
-        run: |
-          terraform init \
-            -backend-config="bucket=${{ secrets.AWS_TF_STATE_BUCKET }}" \
-            -backend-config="key=${REPO_NAME}/terraform.tfstate" \
-            -backend-config="region=${AWS_REGION}" \
-            -backend-config="use_lockfile=true"
-
-      # Terraformのフォーマットチェック
-      - name: Terraform Format
-        run: terraform fmt -check
+          tf-version: ${{ env.TF_VERSION }}
 
       # Terraformの適用
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false
 
-      # (失敗時) Discordの通知
-      - name: Discord Notification For Failure
-        uses: sarisia/actions-status-discord@v1
-        if: ${{ failure() }}
+      # Discord通知をComposite Actionで実行
+      - name: Send Discord Notification
+        if: ${{ always() }}
+        uses: ./.github/actions/discord-notify
         with:
-          webhook: ${{ secrets.DC_WEBHOOK_GHAC }}
-          username: GitHub Actions
-          avatar_url: "https://github.com/actions.png"
-          color: 0xFF0000
-          content: "<@${{ steps.map_id.outputs.DC_ID }}>"
-          status: ${{ job.status }}
-          title: "terraform apply"
-
-      # (中断時) Discordの通知
-      - name: Discord Notification For Cancelled
-        uses: sarisia/actions-status-discord@v1
-        if: ${{ Cancelled() }}
-        with:
-          webhook: ${{ secrets.DC_WEBHOOK_GHAC }}
-          username: GitHub Actions
-          avatar_url: "https://github.com/actions.png"
-          color: 0xFFFF00
-          content: "<@${{ steps.map_id.outputs.DC_ID }}>"
-          status: ${{ job.status }}
-          title: "terraform apply"
-
-      # (成功時) Discordの通知
-      - name: Discord Notification For Success
-        uses: sarisia/actions-status-discord@v1
-        if: ${{ success() }}
-        with:
-          webhook: ${{ secrets.DC_WEBHOOK_GHAC }}
-          username: GitHub Actions
-          avatar_url: "https://github.com/actions.png"
-          color: 0x0000FF
-          content: "<@${{ steps.map_id.outputs.DC_ID }}>"
-          status: ${{ job.status }}
+          webhook-url: ${{ secrets.DC_WEBHOOK_GHAC }}
+          job-status: ${{ job.status }}
+          mention-id: ${{ steps.setup.outputs.discord-id }}
           title: "terraform apply"
