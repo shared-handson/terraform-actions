@@ -38,7 +38,7 @@ resource "aws_s3_bucket" "test_bucket" {
   # 例: "gentle-cat-terraform-test-bucket"
   bucket = "${random_pet.bucket_name.id}-terraform-test-bucket"
 
-  tag = {
+  tags = {
     Name        = "Terraform Test Bucket"
     Environment = "Test"
     ManagedBy   = "Terraform"
