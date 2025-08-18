@@ -1,1 +1,1 @@
-# shared-k3s-infra
+.github/workflows/README.md
