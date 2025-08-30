@@ -45,6 +45,7 @@ jobs:
       - name: Check Backend
         id: check_backend
         continue-on-error: true
+        working-directory: terraform
         run: |
           aws s3api head-bucket --bucket ${{ secrets.AWS_TF_STATE_BUCKET }}
           if [ ! -f ".terraform/terraform.tfstate" ]; then exit 1; fi
@@ -70,6 +71,7 @@ jobs:
       - name: Terraform Plan for PR
         id: plan
         continue-on-error: true
+        working-directory: terraform
         run: |
           set +e
           OUTPUT=$(terraform plan -no-color -input=false 2>&1)

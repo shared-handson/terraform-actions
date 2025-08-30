@@ -6,6 +6,22 @@
 - .github/actions
 - .github/workflows
 
+## Terraform コードの配置場所
+
+Terraform のコード（.tf ファイル）は `terraform/` フォルダに配置する必要がある。  
+プロジェクトルートではなく、terraform フォルダ内でTerraformコマンドが実行される。
+
+```
+プロジェクトルート/
+├── .github/
+│   ├── actions/
+│   └── workflows/
+└── terraform/
+    ├── main.tf
+    ├── variables.tf
+    └── その他の.tfファイル
+```
+
 # 使い方
 
 ## terraform-plan
