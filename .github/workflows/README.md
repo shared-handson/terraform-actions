@@ -1,10 +1,21 @@
-# 適用方法
+# shared-handson専用 Terraform All-in-One Actions 
 
-.github フォルダを使いたいリポジトリの直下に丸ごとコピーすれば OK。  
-特に大事なのが以下の２つのフォルダ。
+## 概要
 
-- .github/actions
-- .github/workflows
+- shared-handsonのAWSアカウントに対してTerraformでIaCする為のGithub Actionsのテンプレート
+- 原則の考え方として、利用者はインフラ部分を意識しなくてもよい作りになっている。
+  - AWSへの認証
+  - バックエンド(tfstateを保存する先のS3)
+
+# 使い方
+
+## 適用方法
+
+以下のフォルダやファイルを使いたいリポジトリの直下に丸ごとコピーすれば OK。  
+
+- .github/actionsフォルダ
+- .github/workflowsフォルダ
+- terraform/backend.tfファイル
 
 ## Terraform コードの配置場所
 
@@ -17,28 +28,11 @@ Terraform のコード（.tf ファイル）は `terraform/` フォルダに配�
 │   ├── actions/
 │   └── workflows/
 └── terraform/
+    ├── backend.tf  ←必ず必要。中身はそのまま使うこと。
     ├── main.tf
     ├── variables.tf
     └── その他の.tfファイル
 ```
-
-# 使い方
-
-## Terraform実行の無効化
-
-プロジェクトルートに `no_terraform` で始まるファイル名のファイル（大文字小文字問わず、拡張子任意）を配置すると、Terraformの実行を無効化できます。
-
-例:
-- `no_terraform`
-- `NO_TERRAFORM`
-- `No_Terraform.txt`
-- `no_terraform.md`
-
-この機能により：
-- **terraform-plan**: planは通常通り実行されますが、PRコメントに「applyしない」旨の警告が表示されます
-- **terraform-apply**: applyが完全にスキップされ、Discord通知も送信されません
-
-Terraformを再度有効にするには、該当ファイルを削除してください。
 
 ## terraform-plan
 
@@ -78,10 +72,32 @@ Github Actions を手動実行で破棄を実行する。
 5. 「Branch: main」
 6. 「Run workflow」の緑ボタンで実行
 
-# secrets
+# TIPS
 
-以下は Organizaions の共用 secrets として登録しているが変動値の為、
-メンテが必要。
+## Terraform実行の無効化
+
+プロジェクトルートに `no_terraform` で始まるファイル名のファイル（大文字小文字問わず、拡張子任意）を配置すると、Terraformの実行を無効化できます。
+
+例:
+- `no_terraform`
+- `NO_TERRAFORM`
+- `No_Terraform.txt`
+- `no_terraform.md`
+
+この機能により：
+- **terraform-plan**: planは通常通り実行されますが、PRコメントに「applyしない」旨の警告が表示されます
+- **terraform-apply**: applyが完全にスキップされ、Discord通知も送信されません
+
+Terraformを再度有効にするには、該当ファイルを削除してください。
+
+## 認証の仕組み
+
+shared-handsonのOrganizations共用のSecretsにパラメータを埋め込んでいる。  
+Organizations内のリポジトリであれば、どこでも参照して認証できる仕組み。
+
+### メンテが必要なSecrets
+
+以下は Organizaions の共用 secrets として登録しているが変動値の為、メンテが必要。
 
 - GH_DC_USERMAP
   - Github と Discord のユーザー ID のマッピング
@@ -95,8 +111,9 @@ Github Actions を手動実行で破棄を実行する。
     }
     ```
 
-以下は全て Organizaions の共用 secrets として登録していて固定値の為、
-基本的には新規登録などは不要。
+### メンテが不要なSecrets
+
+以下は全て Organizaions の共用 secrets として登録していて固定値の為、基本的には新規登録などは不要。
 
 - AWS_IAM_ROLE
   - 展開先の AWS の IAM ロールの ARN
