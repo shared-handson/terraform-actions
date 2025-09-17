@@ -12,7 +12,7 @@ defaults:
     shell: bash
 
 jobs:
-  terraform:
+  terraform-destroy-plan:
     runs-on: ubuntu-latest
 
     env:
