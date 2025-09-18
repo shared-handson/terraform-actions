@@ -35,12 +35,12 @@ jobs:
       # 共通処理をComposite Actionで実行
       - name: Setup Terraform Environment
         id: setup
-        if: steps.check_no_terraform.outputs.no-terraform-found == 'false'
         uses: ./.github/actions/setup
         with:
           aws-iam-role: ${{ secrets.AWS_IAM_ROLE }}
           aws-tf-state-bucket: ${{ secrets.AWS_TF_STATE_BUCKET }}
           gh-dc-usermap: ${{ secrets.GH_DC_USERMAP }}
+          tf-vars: ${{ secrets.TF_VARS }}
           aws-region: ${{ env.AWS_REGION }}
           tf-version: ${{ env.TF_VERSION }}
 
@@ -56,7 +56,10 @@ jobs:
       - name: Terraform Apply
         if: steps.check_no_terraform.outputs.no-terraform-found == 'false'
         working-directory: terraform
-        run: terraform apply -auto-approve -input=false
+        run: |
+          OP_VARS=""
+          [ -f from-gh-secrets.tfvars ] && OP_VARS="-var-file=from-gh-secrets.tfvars"
+          terraform apply -auto-approve -input=false $OP_VARS
 
       # Discord通知をComposite Actionで実行（no_terraformファイルが存在しない場合のみ）
       - name: Send Discord Notification

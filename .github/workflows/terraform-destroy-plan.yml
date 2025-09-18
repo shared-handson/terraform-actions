@@ -33,13 +33,17 @@ jobs:
           aws-iam-role: ${{ secrets.AWS_IAM_ROLE }}
           aws-tf-state-bucket: ${{ secrets.AWS_TF_STATE_BUCKET }}
           gh-dc-usermap: ${{ secrets.GH_DC_USERMAP }}
+          tf-vars: ${{ secrets.TF_VARS }}
           aws-region: ${{ env.AWS_REGION }}
           tf-version: ${{ env.TF_VERSION }}
 
       # Terraformで作ったリソースの破棄の確認
       - name: Terraform Destroy Plan
         working-directory: terraform
-        run: terraform plan -destroy -no-color -input=false
+        run: |
+          OP_VARS=""
+          [ -f from-gh-secrets.tfvars ] && OP_VARS="-var-file=from-gh-secrets.tfvars"
+          terraform plan -destroy -no-color -input=false $OP_VARS
 
       # Discord通知をComposite Actionで実行
       - name: Send Discord Notification
