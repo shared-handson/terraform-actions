@@ -43,6 +43,7 @@ jobs:
           aws-iam-role: ${{ secrets.AWS_IAM_ROLE }}
           aws-tf-state-bucket: ${{ secrets.AWS_TF_STATE_BUCKET }}
           gh-dc-usermap: ${{ secrets.GH_DC_USERMAP }}
+          tf-vars: ${{ secrets.TF_VARS }}
           aws-region: ${{ env.AWS_REGION }}
           tf-version: ${{ env.TF_VERSION }}
 
@@ -79,7 +80,9 @@ jobs:
         working-directory: terraform
         run: |
           set +e
-          OUTPUT=$(terraform plan -no-color -input=false 2>&1)
+          OP_VARS=""
+          [ -f from-gh-secrets.tfvars ] && OP_VARS="-var-file=from-gh-secrets.tfvars"
+          OUTPUT=$(terraform plan -no-color -input=false $OP_VARS 2>&1)
           PLAN_EXIT_CODE=$?
           {
             echo 'PLAN_OUTPUT<<EOF'
