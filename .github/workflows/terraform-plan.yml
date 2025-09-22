@@ -125,9 +125,11 @@ jobs:
           ### 🔧 詳細
           <details>
           <summary>Show terraform plan</summary>
+
           ```terraform
           ${{ steps.plan.outputs.PLAN_OUTPUT }}
           ```
+
           </details>
           EOF
           gh pr comment ${{ github.event.pull_request.number }} --body-file ${TEMP_FILE}
