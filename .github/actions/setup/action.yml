@@ -68,8 +68,8 @@ runs:
       shell: bash
       working-directory: terraform
       env:
-        TF-VARS-EPHEMERAL: ${{ inputs.tf-vars }}
-      run: echo "${TF-VARS-EPHEMERAL}" > ./gh-secrets.auto.tfvars
+        TF_VARS_EPHEMERAL: ${{ inputs.tf-vars }}
+      run: echo "${TF_VARS_EPHEMERAL}" > ./gh-secrets.auto.tfvars
 
     # backend.tfのファイル化
     - name: Create backend.tf
