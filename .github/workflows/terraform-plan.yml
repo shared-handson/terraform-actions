@@ -30,11 +30,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # no_terraformファイルの存在チェック
-      - name: Check No Terraform File
-        id: check_no_terraform
-        uses: ./.github/actions/check-no-terraform
-
       # tfvarsファイルの存在チェック
       - name: Check TFVARS File
         id: check_tfvars
@@ -197,6 +192,12 @@ jobs:
           EOF
           gh pr comment ${{ github.event.pull_request.number }} --body-file ${TEMP_FILE}
           rm -rf ${TEMP_FILE}
+
+      # no_terraformファイルの存在チェック
+      - name: Check No Terraform File
+        id: check_no_terraform
+        if: steps.plan.outcome == 'success'
+        uses: ./.github/actions/check-no-terraform
 
       # (no_terraformファイル存在時) Apply無効化の警告コメント
       - name: PR Comment on No Terraform Warning
