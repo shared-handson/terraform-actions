@@ -35,17 +35,15 @@ jobs:
         id: check_tfvars
         run: |
           TFVARS_FILE=""
-          TFVARS_FOUND="false"
           if [ -n "$(find ./terraform -maxdepth 1 -iname "*.tfvars" -type f)" ]; then
             TFVARS_FILE=$(find ./terraform -maxdepth 1 -iname "*.tfvars" -type f | head -1)
-            TFVARS_FOUND="true"
-            echo "Found tfvars file: $TFVARS_FILE"
+            echo "Found tfvars file: ${TFVARS_FILE}"
             MSG_FILE=$(mktemp)
             echo "❌ **tfvars存在確認 : 失敗**" > ${MSG_FILE}
             echo "⚠️ このPRは現在マージできません。以下の問題を修正してください：" >> ${MSG_FILE}
             echo "" >> ${MSG_FILE}
             echo "### 🔧 詳細" >> ${MSG_FILE}
-            echo "`${TFVARS_FILE}` ファイルが検出されました。" >> ${MSG_FILE}
+            echo "\`${TFVARS_FILE}\` ファイルが検出されました。" >> ${MSG_FILE}
           fi
           echo "MSG_FILE=${MSG_FILE}" >> "$GITHUB_OUTPUT"
 
