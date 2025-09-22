@@ -67,16 +67,9 @@ runs:
       if: inputs.tf-vars != ''
       shell: bash
       working-directory: terraform
-      run: |
-        echo "${{ inputs.tf-vars }}" > ./gh-secrets.auto.tfvars
-
-    - name: cat-test
-      if: inputs.tf-vars != ''
-      shell: bash
-      working-directory: terraform
-      run: |
-        ls -al ./
-        cat ./gh-secrets.auto.tfvars
+      env:
+        ENV-TF-VARS: ${{ inputs.tf-vars }}
+      run: echo "${ENV-TF-VARS}" > ./gh-secrets.auto.tfvars
 
     # backend.tfのファイル化
     - name: Create backend.tf
