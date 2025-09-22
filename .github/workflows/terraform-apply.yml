@@ -56,10 +56,7 @@ jobs:
       - name: Terraform Apply
         if: steps.check_no_terraform.outputs.no-terraform-found == 'false'
         working-directory: terraform
-        run: |
-          OP_VARS=""
-          [ -f from-gh-secrets.tfvars ] && OP_VARS="-var-file=from-gh-secrets.tfvars"
-          terraform apply -auto-approve -input=false $OP_VARS
+        run: terraform apply -auto-approve -input=false
 
       # Discord通知をComposite Actionで実行（no_terraformファイルが存在しない場合のみ）
       - name: Send Discord Notification

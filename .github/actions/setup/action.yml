@@ -69,7 +69,7 @@ runs:
       working-directory: terraform
       run: |
         echo "::add-mask::${{ inputs.tf-vars }}"
-        echo "${{ inputs.tf-vars }}" > from-gh-secrets.tfvars
+        echo "${{ inputs.tf-vars }}" > gh-secrets.auto.tfvars
 
     # Terraformの初期化
     - name: Terraform Init

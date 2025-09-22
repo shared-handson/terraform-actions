@@ -40,10 +40,7 @@ jobs:
       # Terraformで作ったリソースの破棄の確認
       - name: Terraform Destroy Plan
         working-directory: terraform
-        run: |
-          OP_VARS=""
-          [ -f from-gh-secrets.tfvars ] && OP_VARS="-var-file=from-gh-secrets.tfvars"
-          terraform plan -destroy -no-color -input=false $OP_VARS
+        run: terraform plan -destroy -no-color -input=false
 
       # Discord通知をComposite Actionで実行
       - name: Send Discord Notification
