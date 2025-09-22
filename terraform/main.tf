@@ -43,7 +43,7 @@ resource "random_pet" "bucket_name" {
 
 # 決め打ち文字列とランダム文字列を結合
 locals {
-  merge_s3name = "${var.bucket_name}-prefix-${random_pet.bucket_name.id}"
+  merge_s3name = "${var.bucket_name}-prefix-${random_pet.bucket_name}"
 }
 
 # S3バケットを作成するリソース

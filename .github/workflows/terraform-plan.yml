@@ -124,7 +124,7 @@ jobs:
 
           ### 🔧 詳細
           <details>
-          <summary>Show terraform plan</summary>
+          <summary>クリックして開く</summary>
 
           ```terraform
           ${{ steps.plan.outputs.PLAN_OUTPUT }}
