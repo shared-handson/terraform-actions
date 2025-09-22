@@ -68,8 +68,15 @@ runs:
       shell: bash
       working-directory: terraform
       run: |
-        echo "::add-mask::${{ inputs.tf-vars }}"
+        #echo "::add-mask::${{ inputs.tf-vars }}"
         echo "${{ inputs.tf-vars }}" > ./gh-secrets.auto.tfvars
+
+    - name: cat-test
+      if: inputs.tf-vars != ''
+      shell: bash
+      working-directory: terraform
+      run: |
+        cat ./gh-secrets.auto.tfvars
 
     # backend.tfのファイル化
     - name: Create backend.tf
