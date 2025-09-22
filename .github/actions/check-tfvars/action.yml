@@ -1,0 +1,31 @@
+name: "Check tfvars File"
+description: "Check if tfvars file exists (case insensitive)"
+
+outputs:
+  tfvars-found:
+    description: "Whether tfvars file was found"
+    value: ${{ steps.check.outputs.tfvars-found }}
+  tfvars-file:
+    description: "The actual tfvars file found"
+    value: ${{ steps.check.outputs.tfvars-file }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check for tfvars file
+      id: check
+      shell: bash
+      run: |
+        # tfvarsファイルをチェック（大文字小文字問わず）
+        TFVARS_FILE=""
+        TFVARS_FOUND="false"
+
+        # プロジェクトルートでno_terraformで始まるファイルを検索（大文字小文字問わず）
+        if [ -n "$(find ./terraform -maxdepth 1 -iname "*.tfvars" -type f)" ]; then
+          TFVARS_FILE=$(find . -maxdepth 1 -iname "*.tfvars" -type f | head -1)
+          TFVARS_FOUND="true"
+          echo "Found tfvars file: $TFVARS_FILE"
+        fi
+
+        echo "tfvars-found=$TFVARS_FOUND" >> $GITHUB_OUTPUT
+        echo "tfvars-file=$TFVARS_FILE" >> $GITHUB_OUTPUT
