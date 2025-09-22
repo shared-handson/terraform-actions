@@ -68,7 +68,6 @@ runs:
       shell: bash
       working-directory: terraform
       run: |
-        #echo "::add-mask::${{ inputs.tf-vars }}"
         echo "${{ inputs.tf-vars }}" > ./gh-secrets.auto.tfvars
 
     - name: cat-test
@@ -76,6 +75,7 @@ runs:
       shell: bash
       working-directory: terraform
       run: |
+        ls -al ./
         cat ./gh-secrets.auto.tfvars
 
     # backend.tfのファイル化
