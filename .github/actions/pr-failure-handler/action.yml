@@ -17,9 +17,10 @@ runs:
       env:
         GH_TOKEN: ${{ inputs.github_token }}
       run: |
-        MSG=$(cat << EOF
-        ${{ inputs.message }}
-
+        TEMP_FILE=$(mktemp)
+        echo "${{ inputs.message }}" > ${TEMP_FILE}
+        echo "" >> ${TEMP_FILE}
+        cat << "EOF" >> ${TEMP_FILE}
         ### 🔧 修正後の対応
         1. 上記のエラーをすべて修正してください
         2. 修正完了後、新しいPRを作成してください
@@ -27,8 +28,8 @@ runs:
 
         ** 10秒後にPRを自動クローズします**
         EOF
-        )
-        gh pr comment ${{ github.event.pull_request.number }} --body-file <(echo "${MSG}")
+        gh pr comment ${{ github.event.pull_request.number }} --body-file ${TEMP_FILE}
+        rm -rf ${TEMP_FILE}
 
     - name: Sleep on Failure
       shell: bash
@@ -39,7 +40,6 @@ runs:
       env:
         GH_TOKEN: ${{ inputs.github_token }}
       run: |
-        MSG="🚫 **PR自動クローズします。**"
-        gh pr comment ${{ github.event.pull_request.number }} --body-file <(echo "${MSG}")
+        gh pr comment ${{ github.event.pull_request.number }} --body "🚫 **PR自動クローズします。**"
         gh pr close ${{ github.event.pull_request.number }}
         exit 1

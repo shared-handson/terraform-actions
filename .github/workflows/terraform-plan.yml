@@ -117,7 +117,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          MSG=$(cat <<EOF
+          TEMP_FILE=$(mktemp)
+          cat << "EOF" > ${TEMP_FILE}
           👍 **terraform plan : 成功**
           ✅ 正しく適用が可能です。内容は以下を確認してください。
 
@@ -131,8 +132,8 @@ jobs:
 
           </details>
           EOF
-          )
-          gh pr comment ${{ github.event.pull_request.number }} --body-file <(echo "${MSG}")
+          gh pr comment ${{ github.event.pull_request.number }} --body-file ${TEMP_FILE}
+          rm -rf ${TEMP_FILE}
 
       # (no_terraformファイル存在時) Apply無効化の警告コメント
       - name: PR Comment on No Terraform Warning
@@ -140,11 +141,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          MSG=$(cat <<EOF
+          TEMP_FILE=$(mktemp)
+          cat << "EOF" > ${TEMP_FILE}
           ⚠️ **Terraform Apply 無効化**
           🚫 \`${{ steps.check_no_terraform.outputs.no-terraform-file }}\` ファイルが検出されました。
           このPRがマージされても **Terraform apply は実行されません**。
           Apply を有効にするには、このファイルを削除してください。
           EOF
-          )
-          gh pr comment ${{ github.event.pull_request.number }} --body-file <(echo "${MSG}")
+          gh pr comment ${{ github.event.pull_request.number }} --body-file ${TEMP_FILE}
+          rm -rf ${TEMP_FILE}
