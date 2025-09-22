@@ -67,9 +67,9 @@ runs:
       if: inputs.tf-vars != ''
       shell: bash
       working-directory: terraform
-      run: |
-        echo "::add-mask::${{ inputs.tf-vars }}"
-        echo "${{ inputs.tf-vars }}" > ./gh-secrets.auto.tfvars
+      env:
+        TF_VARS_EPHEMERAL: ${{ inputs.tf-vars }}
+      run: echo "${TF_VARS_EPHEMERAL}" > ./gh-secrets.auto.tfvars
 
     # backend.tfのファイル化
     - name: Create backend.tf

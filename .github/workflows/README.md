@@ -16,7 +16,6 @@
 
 - .github/actions フォルダ
 - .github/workflows フォルダ
-- terraform/backend.tf ファイル
 - .gitignore ファイル(既存のファイルがある場合は上書きコピーせずに追記すること)
 
 ## Terraform コードの配置場所
@@ -26,14 +25,17 @@ Terraform のコード（.tf ファイル）は `terraform/` フォルダに配�
 
 ```
 プロジェクトルート/
+├── .gitignore             ←コピーor追記するファイル
 ├── .github/
-│   ├── actions/
-│   └── workflows/
-└── terraform/
-    ├── backend.tf  ←必ず必要。中身はそのまま使うこと。
-    ├── main.tf
-    ├── variables.tf
-    └── その他の.tfファイル
+│   ├── actions/           ←コピーするフォルダ
+│   └── workflows/         ←コピーするフォルダ
+├── terraform/             ←自分で作ってこの中にコードを配置する
+│   ├── main.tf
+│   ├── variables.tf
+│   └── その他の.tfファイル
+│
+└── 他のフォルダ
+    └── 他のファイル
 ```
 
 ## tfvars（変数ファイル）の利用方法
