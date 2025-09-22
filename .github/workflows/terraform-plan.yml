@@ -125,11 +125,9 @@ jobs:
           ### 🔧 詳細
           <details>
           <summary>Show terraform plan</summary>
-
-          \`\`\`terraform
+          ```terraform
           ${{ steps.plan.outputs.PLAN_OUTPUT }}
-          \`\`\`
-
+          ```
           </details>
           EOF
           gh pr comment ${{ github.event.pull_request.number }} --body-file ${TEMP_FILE}
@@ -144,7 +142,7 @@ jobs:
           TEMP_FILE=$(mktemp)
           cat << "EOF" > ${TEMP_FILE}
           ⚠️ **Terraform Apply 無効化**
-          🚫 \`${{ steps.check_no_terraform.outputs.no-terraform-file }}\` ファイルが検出されました。
+          🚫 `${{ steps.check_no_terraform.outputs.no-terraform-file }}` ファイルが検出されました。
           このPRがマージされても **Terraform apply は実行されません**。
           Apply を有効にするには、このファイルを削除してください。
           EOF
