@@ -69,18 +69,29 @@ runs:
       working-directory: terraform
       run: |
         echo "::add-mask::${{ inputs.tf-vars }}"
-        echo "${{ inputs.tf-vars }}" > gh-secrets.auto.tfvars
+        echo "${{ inputs.tf-vars }}" > ./gh-secrets.auto.tfvars
+
+    # backend.tfのファイル化
+    - name: Create backend.tf
+      shell: bash
+      working-directory: terraform
+      run: |
+        cat << "EOF" >> ./backend.tf
+        terraform {
+          backend "s3" {
+            bucket       = "${{ inputs.aws-tf-state-bucket }}"
+            key          = "${{ env.REPO_NAME }}/terraform.tfstate"
+            region       = "${{ inputs.aws-region }}"
+            use_lockfile = true
+          }
+        }
+        EOF
 
     # Terraformの初期化
     - name: Terraform Init
       shell: bash
       working-directory: terraform
-      run: |
-        terraform init \
-          -backend-config="bucket=${{ inputs.aws-tf-state-bucket }}" \
-          -backend-config="key=${{ env.REPO_NAME }}/terraform.tfstate" \
-          -backend-config="region=${{ inputs.aws-region }}" \
-          -backend-config="use_lockfile=true"
+      run: terraform init
 
     # Terraformのフォーマットチェック
     #- name: Terraform Format
