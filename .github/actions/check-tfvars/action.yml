@@ -22,7 +22,7 @@ runs:
 
         # プロジェクトルートでno_terraformで始まるファイルを検索（大文字小文字問わず）
         if [ -n "$(find ./terraform -maxdepth 1 -iname "*.tfvars" -type f)" ]; then
-          TFVARS_FILE=$(find . -maxdepth 1 -iname "*.tfvars" -type f | head -1)
+          TFVARS_FILE=$(find ./terraform -maxdepth 1 -iname "*.tfvars" -type f | head -1)
           TFVARS_FOUND="true"
           echo "Found tfvars file: $TFVARS_FILE"
         fi

@@ -30,11 +30,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # no_terraformファイルの存在チェック
-      - name: Check No Terraform File
-        id: check_no_terraform
-        uses: ./.github/actions/check-no-terraform
-
       # tfvarsファイルの存在チェック
       - name: Check TFVARS File
         id: check_tfvars
@@ -52,7 +47,7 @@ jobs:
           ⚠️ このPRは現在マージできません。以下の問題を修正してください：
 
           ### 🔧 詳細
-          `${{ steps.check_no_terraform.outputs.tfvars-file }}` ファイルが検出されました。
+          `${{ steps.check_tfvars.outputs.tfvars-file }}` ファイルが検出されました。
 
           ### 🔧 修正後の対応
           1. 上記のエラーをすべて修正してください
@@ -128,9 +123,7 @@ jobs:
         working-directory: terraform
         run: |
           set +e
-          OP_VARS=""
-          [ -f from-gh-secrets.tfvars ] && OP_VARS="-var-file=from-gh-secrets.tfvars"
-          OUTPUT=$(terraform plan -no-color -input=false $OP_VARS 2>&1)
+          OUTPUT=$(terraform plan -no-color -input=false 2>&1)
           PLAN_EXIT_CODE=$?
           {
             echo 'PLAN_OUTPUT<<EOF'
@@ -197,6 +190,12 @@ jobs:
           EOF
           gh pr comment ${{ github.event.pull_request.number }} --body-file ${TEMP_FILE}
           rm -rf ${TEMP_FILE}
+
+      # no_terraformファイルの存在チェック
+      - name: Check No Terraform File
+        id: check_no_terraform
+        if: steps.plan.outcome == 'success'
+        uses: ./.github/actions/check-no-terraform
 
       # (no_terraformファイル存在時) Apply無効化の警告コメント
       - name: PR Comment on No Terraform Warning

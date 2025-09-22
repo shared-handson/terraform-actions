@@ -7,6 +7,10 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+    random = {
+      source  = "hashicorp/random"
       version = "~> 3.0"
     }
   }
@@ -16,6 +20,7 @@ terraform {
 # リージョンはGitHub Actionsの環境変数から自動的に引き継がれるため、
 # ここで指定する必要はありません。
 provider "aws" {
+  region = "ap-northeast-1"
   default_tags {
     tags = {
       Owner     = "Github Actions" // 各自の名前に変えること

@@ -36,9 +36,10 @@ Terraform のコード（.tf ファイル）は `terraform/` フォルダに配�
     └── その他の.tfファイル
 ```
 
-## tfvars（変数ファイル）の安全な利用方法
+## tfvars（変数ファイル）の利用方法
 
-Terraform の変数を GitHub Secrets から安全に渡すことができる。  
+tfvars は GitHub Secrets から渡す設計となっている。  
+**terraform ディレクトリに\*.tfvars が存在すると plan 時にエラーになる**  
 リポジトリの Secrets に `TF_VARS` を設定すると、自動的に利用されるようになっている。  
 使い方は以下。
 
