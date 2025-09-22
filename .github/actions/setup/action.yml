@@ -79,9 +79,9 @@ runs:
         cat << "EOF" >> ./backend.tf
         terraform {
           backend "s3" {
-            bucket       = ${{ inputs.aws-tf-state-bucket }}
-            key          = ${{ env.REPO_NAME }}/terraform.tfstate"
-            region       = ${{ inputs.aws-region }}
+            bucket       = "${{ inputs.aws-tf-state-bucket }}"
+            key          = "${{ env.REPO_NAME }}/terraform.tfstate"
+            region       = "${{ inputs.aws-region }}"
             use_lockfile = true
           }
         }
