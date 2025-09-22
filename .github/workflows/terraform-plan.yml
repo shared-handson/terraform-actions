@@ -30,38 +30,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # tfvarsファイルの存在チェック
+      # tfvarsファイルの存在チェック＆失敗時のメッセージを作成
       - name: Check TFVARS File
         id: check_tfvars
-        uses: ./.github/actions/check-tfvars
-
-      # (tfvarsファイル存在時) Pull Request コメントに結果してクローズ
-      - name: Handle Backend Check Failure
-        if: steps.check_tfvars.outputs.tfvars-found == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TEMP_FILE=$(mktemp)
-          cat << "EOF" > ${TEMP_FILE}
-          ❌ **tfvars存在確認 : 失敗**
-          ⚠️ このPRは現在マージできません。以下の問題を修正してください：
+          TFVARS_FILE=""
+          if [ -n "$(find ./terraform -maxdepth 1 -iname "*.tfvars" -type f)" ]; then
+            TFVARS_FILE=$(find ./terraform -maxdepth 1 -iname "*.tfvars" -type f | head -1)
+            echo "Found tfvars file: ${TFVARS_FILE}"
+            MSG_FILE=$(mktemp)
+            echo "❌ **tfvars存在確認 : 失敗**" > ${MSG_FILE}
+            echo "⚠️ このPRは現在マージできません。以下の問題を修正してください：" >> ${MSG_FILE}
+            echo "" >> ${MSG_FILE}
+            echo "### 🔧 詳細" >> ${MSG_FILE}
+            echo "\`${TFVARS_FILE}\` ファイルが検出されました。" >> ${MSG_FILE}
+          fi
+          echo "MSG_FILE=${MSG_FILE}" >> "$GITHUB_OUTPUT"
 
-          ### 🔧 詳細
-          `${{ steps.check_tfvars.outputs.tfvars-file }}` ファイルが検出されました。
-
-          ### 🔧 修正後の対応
-          1. 上記のエラーをすべて修正してください
-          2. 修正完了後、新しいPRを作成してください
-          3. または、このPRを再オープンして修正をpushしてください
-
-          **10秒後にPRを自動クローズします**
-          EOF
-          gh pr comment ${{ github.event.pull_request.number }} --body-file ${TEMP_FILE}
-          rm -rf ${TEMP_FILE}
-          sleep 10
-          gh pr comment ${{ github.event.pull_request.number }} --body "🚫 **PR自動クローズします。**"
-          gh pr close ${{ github.event.pull_request.number }}
-          exit 1
+      # (tfvarsが存在していた時) Pull Request コメントに結果してクローズ
+      - name: Handle tfvars Check Failure
+        if: steps.check_tfvars.outputs.MSG_FILE != ''
+        uses: ./.github/actions/pr-failure-handler
+        with:
+          message-file: ${{ steps.check_tfvars.outputs.MSG_FILE }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       # 共通処理をComposite Actionで実行
       - name: Setup Terraform Environment
