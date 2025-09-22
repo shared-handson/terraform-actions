@@ -52,7 +52,7 @@ jobs:
           ⚠️ このPRは現在マージできません。以下の問題を修正してください：
 
           ### 🔧 詳細
-          `${{ steps.check_no_terraform.outputs.tfvars-file }}` ファイルが検出されました。
+          `${{ steps.check_tfvars.outputs.tfvars-file }}` ファイルが検出されました。
 
           ### 🔧 修正後の対応
           1. 上記のエラーをすべて修正してください
