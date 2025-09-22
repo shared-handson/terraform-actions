@@ -59,7 +59,7 @@ jobs:
           2. 修正完了後、新しいPRを作成してください
           3. または、このPRを再オープンして修正をpushしてください
 
-          ** 10秒後にPRを自動クローズします **
+          **10秒後にPRを自動クローズします**
           EOF
           gh pr comment ${{ github.event.pull_request.number }} --body-file ${TEMP_FILE}
           rm -rf ${TEMP_FILE}
@@ -112,7 +112,7 @@ jobs:
           2. 修正完了後、新しいPRを作成してください
           3. または、このPRを再オープンして修正をpushしてください
 
-          ** 10秒後にPRを自動クローズします **
+          **10秒後にPRを自動クローズします**
           EOF
           gh pr comment ${{ github.event.pull_request.number }} --body-file ${TEMP_FILE}
           rm -rf ${TEMP_FILE}
@@ -165,7 +165,7 @@ jobs:
           2. 修正完了後、新しいPRを作成してください
           3. または、このPRを再オープンして修正をpushしてください
 
-          ** 10秒後にPRを自動クローズします **
+          **10秒後にPRを自動クローズします**
           EOF
           gh pr comment ${{ github.event.pull_request.number }} --body-file ${TEMP_FILE}
           rm -rf ${TEMP_FILE}
