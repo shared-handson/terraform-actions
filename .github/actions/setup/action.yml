@@ -101,16 +101,8 @@ runs:
       working-directory: terraform
       run: terraform init
 
-    # Terraformのフォーマットチェック
-    #- name: Terraform Format
-    #  shell: bash
-    #  working-directory: terraform
-    #  run: terraform fmt -check
-
-    # tfvarsファイルの構文チェック
-    #- name: Terraform Validate tfvars
-    #  if: inputs.tf-vars != ''
-    #  shell: bash
-    #  working-directory: terraform
-    #  run: |
-    #    terraform validate -var-file=from-gh-secrets.tfvars
+    # Terraformのフォーマットを整形
+    - name: Terraform Format
+      shell: bash
+      working-directory: terraform
+      run: terraform fmt
