@@ -76,7 +76,7 @@ runs:
       shell: bash
       working-directory: terraform
       run: |
-        cat << "EOF" >> ./backend.tf
+        cat << "EOF" > ./backend.tf
         terraform {
           backend "s3" {
             bucket       = "${{ inputs.aws-tf-state-bucket }}"
@@ -86,6 +86,14 @@ runs:
           }
         }
         EOF
+
+    # 以前ダウンロードしたTerraformの各プロバイダーを復元
+    - name: Cache Load Terraform
+      uses: actions/cache@v4
+      with:
+        path: terraform/.terraform
+        key: ${{ runner.os }}-terraform-${{ inputs.tf-version }}-${{ hashFiles('terraform/.terraform.lock.hcl') }}
+        restore-keys: ${{ runner.os }}-terraform-${{ inputs.tf-version }}-
 
     # Terraformの初期化
     - name: Terraform Init
