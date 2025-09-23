@@ -4,9 +4,11 @@
 
 - shared-handson の AWS アカウントに対して Terraform で IaC する為の Github Actions のテンプレート
 - Discord の通知機能がついてる
+- パブリックリポジトリでもプライベートリポジトリでも、shared-handsonのGithub Organizationsに所属していればOK
 - 原則の考え方として、利用者はインフラ部分を意識しなくてもよい作りになっている。
   - AWS への認証
   - バックエンド(tfstate を保存する先の S3)
+
 
 # 使い方
 
@@ -20,8 +22,8 @@
 
 ## Terraform コードの配置場所
 
-Terraform のコード（.tf ファイル）は `terraform/` フォルダに配置する必要がある。  
-プロジェクトルートではなく、terraform フォルダ内で Terraform コマンドが実行される。
+Terraform のコード（.tf ファイル）は `terraform` フォルダに配置する必要がある。  
+**terraform フォルダが無かったら plan 時にエラーになる**  
 
 ```
 プロジェクトルート/
@@ -37,6 +39,37 @@ Terraform のコード（.tf ファイル）は `terraform/` フォルダに配�
 └── 他のフォルダ
     └── 他のファイル
 ```
+
+## AWS への認証および、バックエンド(tfstate を保存する先の S3)
+
+Github Actions側で自動制御するため、**Terraformのコード内にはそれに関連する記述は入れないこと**  
+例えば、以下のようなコードを入れると予期せぬ挙動をする恐れが高い。  
+```hcl
+provider "aws" {
+  access_key = "AKIAIOSFODNN7EXAMPLE"
+  secret_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+  assume_role {
+    role_arn = "arn:aws:iam::<自分のAWSアカウントID>:role/<スイッチロール先のIAMロール名>"
+}
+```
+
+```hcl
+terraform {
+  backend "s3" {
+    bucket = "example-s3"
+    region = "ap-north-east-1"
+  }
+}
+```
+
+勘違いしやすいポイントではあるが、**リソースを展開する先のリージョンの設定は入れること**
+
+```hcl
+provider "aws" {
+  region = "ap-northeast-1"
+}
+```
+
 
 ## tfvars（変数ファイル）の利用方法
 
