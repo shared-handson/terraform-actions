@@ -4,7 +4,7 @@
 
 - shared-handson の AWS アカウントに対して Terraform で IaC する為の Github Actions のテンプレート
 - Discord の通知機能がついてる
-- パブリックリポジトリでもプライベートリポジトリでも、shared-handsonのGithub Organizationsに所属していればOK
+- パブリックリポジトリでもプライベートリポジトリでもOK
 - 原則の考え方として、利用者はインフラ部分を意識しなくてもよい作りになっている。
   - AWS への認証
   - バックエンド(tfstate を保存する先の S3)
